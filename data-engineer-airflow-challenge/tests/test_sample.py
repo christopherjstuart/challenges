@@ -1,5 +1,7 @@
-import datetime
+import sys
 import pytest
+from datetime import datetime
+sys.path.append('../')
 from dags import challenge as c
 
 
@@ -9,7 +11,7 @@ class TestSample:
     def airflow_context(self) -> dict:
         """https://airflow.apache.org/code.html#default-variables"""
         return {
-            'ds': datetime.datetime.now().isoformat().split('T')[0],
+            'ds': datetime.now().isoformat().split('T')[0],
             'params': {
                 'name': 'World',
             },
@@ -23,7 +25,7 @@ class TestSample:
 
     def test_hello_world(self, airflow_context):
         # Arrange
-        now = datetime.datetime.now().isoformat().split('T')[0]
+        now = datetime.now().isoformat().split('T')[0]
         expected = 'Date: ' + now
         # Act
         execution_date = c.PrintExecutionDate.callable(**airflow_context)
