@@ -18,7 +18,8 @@ class BonusTests(unittest.TestCase):
         HEAD.get_keyword_headlines(keywords)
         up_articles = set()
         for bucket in HEAD.up_sources:
-            file_obj = HEAD.upload_cli.Bucket(bucket).objects.filter(Prefix=HEAD.file_name)
+            file_obj = HEAD.upload_cli.Bucket(
+                bucket).objects.filter(Prefix=HEAD.file_name)
             for obj in file_obj:
                 print('BODY1: {}'.format(obj.get('Body')))
                 print('BODY2: {}'.format(obj.get()['Body']))
@@ -26,14 +27,15 @@ class BonusTests(unittest.TestCase):
                 print('READER: {}'.format(reader))
                 up_articles.update([row['url'] for row in reader])
         expect_articles = set([item for sub in [article.url for article in
-                               HEAD.bucket_dict.values()] for item in sub])
+                                                HEAD.bucket_dict.values()] for item in sub])
         missing_articles = expect_articles.difference(up_articles)
         self.assertTrue(not missing_articles)
 
     def test_buckets(self):
         HEAD.create_csvs()
         HEAD.upload_s3()
-        up_buckets = set([bucket.name for bucket in HEAD.upload_cli.buckets.all()])
+        up_buckets = set(
+            [bucket.name for bucket in HEAD.upload_cli.buckets.all()])
         expect_buckets = set(HEAD.bucket_dict.keys())
         missing_buckets = expect_buckets.difference(up_buckets)
         self.assertTrue(not missing_buckets)

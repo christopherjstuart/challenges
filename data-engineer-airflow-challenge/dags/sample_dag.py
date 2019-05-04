@@ -22,7 +22,8 @@ default_args = {
 dag = DAG(
     'sample_dag',
     default_args=default_args,
-    schedule_interval=timedelta(minutes=5),  # DAG will run once every 5 minutes
+    # DAG will run once every 5 minutes
+    schedule_interval=timedelta(minutes=5),
     catchup=False,
 )
 

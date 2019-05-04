@@ -40,7 +40,8 @@ class Headlines(object):
         # this will return a complete dataset of 'en' news sources, not paginated
         self.en_sources = sorted([item['id'] for item in
                                   self.news_cli.get_sources(language='en')['sources']])
-        logging.debug('SOURCES ({}): {}'.format(len(self.en_sources), self.en_sources))
+        logging.debug('SOURCES ({}): {}'.format(
+            len(self.en_sources), self.en_sources))
         return self.en_sources
 
     def get_keyword_headlines(self, keywords) -> list:
@@ -62,7 +63,8 @@ class Headlines(object):
         num_results = headlines['totalResults']
         while len(self.headlines) < num_results:
             try:
-                results = get_top(sources=sources, page_size=100, page=page_num)
+                results = get_top(
+                    sources=sources, page_size=100, page=page_num)
                 self.headlines.extend(results['articles'])
                 logging.debug(('TOTAL_ARTICLES: {}, PAGE: {}, NUM_PAGE_RESULTS: {}, '
                                'NUM_AGGD_ARTICLES: {}'.format(num_results, page_num, len(results['articles']),
@@ -78,8 +80,8 @@ class Headlines(object):
     def create_csvs(self) -> list:
         # dynamically gen fields by flattening nested vars
         fields = list(itertools.chain(*[[k] if not isinstance(v, dict) else
-                      map(lambda x: '_'.join([k, x]), v.keys()) for k, v in
-                      self.headlines[0].items()]))
+                                        map(lambda x: '_'.join([k, x]), v.keys()) for k, v in
+                                        self.headlines[0].items()]))
         logging.debug('FIELDS ({}): {}'.format(len(fields), fields))
         # munge fields to account for flattened nested vars
         for headline in self.headlines:
@@ -104,7 +106,8 @@ class Headlines(object):
     def upload_s3(self):
         for path in self.paths:
             out_file, bucket = path.split('@')
-            logging.debug('UPLOADING: {}, TO: {}/{}'.format(path, bucket, self.file_name))
+            logging.debug(
+                'UPLOADING: {}, TO: {}/{}'.format(path, bucket, self.file_name))
             # first check if bucket already exists
             if not self.upload_cli.Bucket(bucket) in self.upload_cli.buckets.all():
                 try:
@@ -115,6 +118,7 @@ class Headlines(object):
                     self.upload_cli.create_bucket(Bucket='.'.join([bucket, log_date]), ACL='public-read-write',
                                                   CreateBucketConfiguration={'LocationConstraint': self.region})
             try:
-                self.upload_cli.meta.client.upload_file(path, bucket, self.file_name)
+                self.upload_cli.meta.client.upload_file(
+                    path, bucket, self.file_name)
             except Exception as ex:
                 logging.error('Caught upload error: {}'.format(ex))

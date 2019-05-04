@@ -36,7 +36,8 @@ dag = DAG(
 get_keyword_headlines_task = PythonOperator(
     task_id='get_keyword_headlines',
     python_callable=NEWS.get_keyword_headlines,
-    params={'keywords': ['Tempus Labs', 'Eric Lefkofsky', 'Cancer', 'Immunotherapy']},
+    params={'keywords': ['Tempus Labs',
+                         'Eric Lefkofsky', 'Cancer', 'Immunotherapy']},
     provide_context=True,
     dag=dag
 )

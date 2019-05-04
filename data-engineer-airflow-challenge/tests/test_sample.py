@@ -1,8 +1,8 @@
+from dags import challenge as c
 import sys
 import pytest
 from datetime import datetime
 sys.path.append('../')
-from dags import challenge as c
 
 
 class TestSample:
